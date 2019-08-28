@@ -8,7 +8,7 @@ get '/ganti' do
 
     # nginx minimum config
 
-    `server {
+    "server {
 
         server_name your.domain.com;
 
@@ -31,5 +31,5 @@ get '/ganti' do
             #error_log  /var/log/nginx/app-error.log;
             #access_log /var/log/nginx/app-access.log;
         }
-    }`
+    }"
 end
