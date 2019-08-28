@@ -4,17 +4,26 @@ end
 
 # = ToDo
 # This must be protect with password!
+# == Params
+# port
+#
 get '/ganti' do
+
+    puts "port #{params[:port]}"
 
     # nginx minimum config
     puts "request ip: #{request.ip}"
 
-    "server {
+    `sudo rm /etc/nginx/sites-available/#{DOMAIN_NAME}`
 
-        server_name your.domain.com;
+    file = File.open("/etc/nginx/sites-available/#{DOMAIN_NAME}")
+
+    file.puts "server {
+
+        server_name #{DOMAIN_NAME};
 
         location / {
-            proxy_pass http://#{request.ip}:3023;
+            proxy_pass http://#{request.ip}:#{params[:port]};
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection 'upgrade';
@@ -33,4 +42,6 @@ get '/ganti' do
             #access_log /var/log/nginx/app-access.log;
         }
     }"
+
+    file.close
 end

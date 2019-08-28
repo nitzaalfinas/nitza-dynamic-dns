@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler'
+require_relative "_env"
 
 Bundler.require
 
