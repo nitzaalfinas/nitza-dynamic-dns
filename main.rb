@@ -7,13 +7,14 @@ end
 get '/ganti' do
 
     # nginx minimum config
+    puts "request ip: #{request.ip}"
 
     "server {
 
         server_name your.domain.com;
 
         location / {
-            proxy_pass http://your-ip-address:3023;
+            proxy_pass http://#{request.ip}:3023;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection 'upgrade';
