@@ -42,12 +42,31 @@ get '/ganti' do
             proxy_cache_bypass $http_upgrade;
 
             # tambahkan ini jika menggunakan https
-            #proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-Proto https;
 
-            #error_log  /var/log/nginx/app-error.log;
-            #access_log /var/log/nginx/app-access.log;
+            error_log  /var/log/nginx/#{DOMAIN_NAME}-error.log;
+            access_log /var/log/nginx/#{DOMAIN_NAME}-access.log;
         }
-    }"
+
+	listen 443 ssl; # managed by Certbot
+        ssl_certificate /etc/letsencrypt/live/#{DOMAIN_NAME}/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/#{DOMAIN_NAME}/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+    }
+    
+    server {
+        if ($host = #{DOMAIN_NAME}) {
+            return 301 https://$host$request_uri;
+        } # managed by Certbot
+
+
+
+        server_name #{DOMAIN_NAME};
+        listen 80;
+        return 404; # managed by Certbot
+    } 
+    "
 
     file.close
 
