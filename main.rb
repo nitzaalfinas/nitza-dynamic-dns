@@ -16,9 +16,15 @@ get '/ganti' do
 
     `sudo rm /etc/nginx/sites-available/#{DOMAIN_NAME}`
 
-    file = File.open("/etc/nginx/sites-available/#{DOMAIN_NAME}")
+    file_name = "#{APP_DATA_FOLDER}/#{DOMAIN_NAME}"
 
-    file.puts "server {
+    # remove file before writing a new one
+    `rm #{file_name}`
+
+    file = File.open(file_name, "w")
+
+    file.puts "
+    server {
 
         server_name #{DOMAIN_NAME};
 
@@ -44,4 +50,12 @@ get '/ganti' do
     }"
 
     file.close
+
+    `sudo mv #{file_name} /etc/nginx/sites-available/#{DOMAIN_NAME}`
+
+    `sudo chown root:root /etc/nginx/sites-available/#{DOMAIN_NAME}`
+
+    `sudo systemctl reload nginx.service`
+
+    "selesai"
 end
